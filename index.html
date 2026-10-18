@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CropCare AI – AI Based Crop Disease Prediction System</title>
+<style>
+:root{--bg:#f6faf4;--card:#fff;--ink:#16301f;--mut:#5b7062;--pri:#2e8b57;--pri2:#1f6b42;--acc:#f2b632;--bd:#dbe7d8;--bad:#c0392b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a12;--card:#16261b;--ink:#e6f2e8;--mut:#9bb3a2;--pri:#4cc582;--pri2:#2e8b57;--bd:#26402e}}
+:root[data-theme="dark"]{--bg:#0e1a12;--card:#16261b;--ink:#e6f2e8;--mut:#9bb3a2;--pri:#4cc582;--pri2:#2e8b57;--bd:#26402e}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px;height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:auto;padding:0 20px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-weight:800;font-size:1.15rem}.logo span{color:var(--pri)}
+nav ul{display:flex;gap:20px;list-style:none;margin:0;padding:0;font-size:.92rem;align-items:center}
+nav li a:hover{color:var(--pri)}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--pri);color:#fff;border:0;padding:12px 24px;border-radius:12px;font-weight:700;display:inline-block;transition:.2s}
+.btn:hover{background:var(--pri2);transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--bd)}
+.ic{background:none;border:1px solid var(--bd);border-radius:10px;padding:6px 10px;color:var(--ink)}
+.hero{padding:70px 0 50px;background:radial-gradient(900px 400px at 80% -10%,color-mix(in srgb,var(--pri) 25%,transparent),transparent)}
+.hero .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+.tag{display:inline-block;background:color-mix(in srgb,var(--pri) 15%,transparent);color:var(--pri);padding:5px 14px;border-radius:99px;font-size:.82rem;font-weight:700}
+h1{font-size:clamp(2rem,5vw,3.3rem);line-height:1.1;margin:14px 0}
+h1 em{font-style:normal;color:var(--pri)}
+.lead{color:var(--mut);font-size:1.08rem;max-width:520px}
+.hero .cta{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:20px}
+.stat b{font-size:1.9rem;color:var(--pri);display:block}.stat small{color:var(--mut)}
+section{padding:60px 0}
+h2{font-size:1.9rem;margin:0 0 8px}.sub{color:var(--mut);margin:0 0 30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:22px}
+.card .e{font-size:1.8rem}.card h3{margin:8px 0 4px}.card p{margin:0;color:var(--mut);font-size:.93rem}
+.det{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.drop{border:2px dashed var(--pri);border-radius:18px;min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;cursor:pointer;background:var(--card);transition:.2s}
+.drop.on{background:color-mix(in srgb,var(--pri) 12%,var(--card))}
+.drop img{max-width:100%;max-height:260px;border-radius:12px}
+select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--ink);font:inherit;margin-bottom:12px}
+.res{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:22px;min-height:280px}
+.res.empty{display:flex;align-items:center;justify-content:center;color:var(--mut);text-align:center}
+.bar{height:10px;border-radius:99px;background:var(--bd);overflow:hidden;margin:6px 0 14px}
+.bar i{display:block;height:100%;background:var(--pri);width:0;transition:width .8s}
+.pill{display:inline-block;padding:3px 12px;border-radius:99px;font-size:.78rem;font-weight:700;color:#fff}
+.sev-low{background:#2e8b57}.sev-mod{background:#d98e04}.sev-high{background:var(--bad)}
+.res h3{font-size:1.4rem;margin:8px 0}.res h4{margin:14px 0 4px;font-size:.9rem;color:var(--pri)}
+.res ul{margin:0;padding-left:18px;color:var(--mut);font-size:.93rem}
+.spin{width:34px;height:34px;border:4px solid var(--bd);border-top-color:var(--pri);border-radius:50%;animation:s 1s linear infinite;margin:auto}@keyframes s{to{transform:rotate(360deg)}}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
+.step{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:22px;position:relative}
+.step:before{counter-increment:s;content:counter(s);position:absolute;top:-14px;left:18px;background:var(--pri);color:#fff;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800}
+.step h3{margin:6px 0 4px;font-size:1.02rem}.step p{margin:0;color:var(--mut);font-size:.9rem}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{border:1px solid var(--bd);background:var(--card);color:var(--ink);padding:8px 16px;border-radius:99px}
+.tabs button.a{background:var(--pri);color:#fff;border-color:var(--pri)}
+.pm{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.pm .card ul{margin:8px 0 0;padding-left:18px;color:var(--mut);font-size:.93rem}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--bd)}
+.scroll{overflow-x:auto}
+.hist{margin-top:14px;font-size:.88rem;color:var(--mut)}
+footer{border-top:1px solid var(--bd);padding:30px 0;text-align:center;color:var(--mut);font-size:.88rem}
+.gauge{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:1.6rem;flex:none}
+.gauge span{background:var(--card);width:84px;height:84px;border-radius:50%;display:grid;place-items:center}
+.row2{display:flex;gap:16px;align-items:center;margin:10px 0}
+.alert{border-radius:12px;padding:10px 14px;margin:12px 0;font-size:.9rem;border:1px solid var(--bd)}
+.alert.hi{background:color-mix(in srgb,var(--bad) 14%,transparent);border-color:var(--bad)}.alert.md{background:color-mix(in srgb,var(--acc) 18%,transparent)}.alert.lo{background:color-mix(in srgb,var(--pri) 12%,transparent)}
+.sl{display:grid;grid-template-columns:130px 1fr 50px;gap:10px;align-items:center;margin:8px 0;font-size:.92rem}
+input[type=range]{width:100%;accent-color:var(--pri)}
+.fm{font-size:1.18rem}.fm .detail{display:none}
+.sel{padding:6px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--ink)}
+.page{display:none;min-height:70vh}.page.on{display:block;animation:fi .35s}@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+nav ul a{padding:6px 2px;border-bottom:2px solid transparent;white-space:nowrap}nav ul a.on{color:var(--pri);border-color:var(--pri);font-weight:700}
+.hero.page{padding:70px 0 50px}.hero.page.on{display:block}
+.home2{padding:10px 0 60px}.home2 a.card{display:block;transition:.2s}.home2 a.card:hover{transform:translateY(-4px);border-color:var(--pri)}
+@media(max-width:800px){.hero .wrap,.det{grid-template-columns:1fr}nav .wrap{height:auto;flex-direction:column;gap:6px;padding:8px 20px}nav ul{gap:14px;overflow-x:auto;max-width:100%;font-size:.85rem}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+<a class="logo" href="#home">🌿 Crop<span>Care</span> AI</a>
+<ul id="menu"><li><a href="#home" data-r="home" data-i="n_home">Home</a></li><li><a href="#detect" data-r="detect" data-i="n_det">Detector</a></li><li><a href="#how" data-r="how" data-i="n_how">How it works</a></li><li><a href="#library" data-r="library" data-i="n_lib">Diseases</a></li><li><a href="#warn" data-r="warn" data-i="n_warn">Early Warning</a></li><li><a href="#project" data-r="project">Project (PME)</a></li><li><select class="sel" id="lang"><option value="en">English</option><option value="hi">हिन्दी</option><option value="mr">मराठी</option></select></li><li><button class="ic" id="fmb" title="Farmer mode">👨‍🌾</button></li><li><button class="ic" id="th" aria-label="Toggle theme">🌓</button></li></ul>
+</div></nav>
+
+<header class="hero page" id="p-home"><div class="wrap">
+<div>
+<span class="tag">AI • Smart Agriculture</span>
+<h1>Spot crop diseases <em>before</em> they spread.</h1>
+<p class="lead">Upload a photo of a leaf and our AI-based system predicts the likely disease, its severity, and the treatment and prevention steps — in seconds.</p>
+<div class="cta"><a class="btn" href="#detect">Try the detector</a><a class="btn ghost" href="#project">View project report</a></div>
+</div>
+<div class="stats">
+<div class="stat"><b>6</b><small>Conditions detected in demo</small></div>
+<div class="stat"><b>&lt;3s</b><small>Analysis time</small></div>
+<div class="stat"><b>20-40%</b><small>Crop loss from disease (est.)</small></div>
+<div class="stat"><b>Free</b><small>For small farmers</small></div>
+</div>
+</div>
+<div class="wrap" style="margin-top:50px"><h2>✨ Key Features</h2><p class="sub">Everything a farmer needs in one system.</p><div class="grid">
+<div class="card"><div class="e">🤖</div><h3>AI Leaf Prediction</h3><p>Image-based disease identification.</p></div>
+<div class="card"><div class="e">🌾</div><h3>Multiple Crops</h3><p>Tomato, Potato, Wheat, Rice, Maize, Grape, Apple, Cotton.</p></div>
+<div class="card"><div class="e">📖</div><h3>Disease Info</h3><p>Cause, symptoms and spread after every scan.</p></div>
+<div class="card"><div class="e">📊</div><h3>Severity Estimation</h3><p>Affected leaf area with Mild/Moderate/Severe grade.</p></div>
+<div class="card"><div class="e">💊</div><h3>Treatment Advice</h3><p>Chemical, organic and preventive steps.</p></div>
+<div class="card"><div class="e">⚠️</div><h3>Early Warning</h3><p>Weather-based disease risk alerts.</p></div>
+<div class="card"><div class="e">❤️</div><h3>Crop Health Score</h3><p>0-100 health score for every leaf.</p></div>
+<div class="card"><div class="e">🗣️</div><h3>Farmer Mode</h3><p>English, हिन्दी, मराठी with voice read-out.</p></div>
+</div></div>
+<div class="wrap home2" style="margin-top:50px"><div class="grid">
+<a class="card" href="#detect"><div class="e">🔬</div><h3>Disease Detector</h3><p>Upload a leaf photo and get a diagnosis.</p></a>
+<a class="card" href="#how"><div class="e">⚙️</div><h3>How it works</h3><p>See the AI pipeline step by step.</p></a>
+<a class="card" href="#library"><div class="e">📚</div><h3>Disease Library</h3><p>Symptoms of common crop diseases.</p></a>
+<a class="card" href="#project"><div class="e">📘</div><h3>Project Report</h3><p>Plan, cost, business model and team.</p></a>
+</div></div></header>
+
+<section class="page" id="p-detect"><div class="wrap">
+<h2>🔬 Disease Detector</h2>
+<p class="sub">Select a crop, upload or drop a clear leaf photo, and click Analyze.</p>
+<div class="det">
+<div>
+<select id="crop"><option>Tomato</option><option>Potato</option><option>Wheat</option><option>Rice</option><option>Maize</option><option>Grape</option><option>Apple</option><option>Cotton</option></select>
+<label class="drop" id="drop"><input type="file" id="file" accept="image/*" hidden>
+<div id="ph"><div style="font-size:2.6rem">🍃</div><b>Click or drag a leaf image here</b><br><small style="color:var(--mut)">JPG / PNG</small></div>
+<img id="pv" alt="" hidden></label>
+<div style="display:flex;gap:10px;margin-top:12px"><button class="btn" id="go" disabled>Analyze leaf</button><button class="btn ghost" id="clr">Reset</button></div>
+<canvas id="cv" hidden></canvas>
+</div>
+<div class="res empty" id="res">Your diagnosis will appear here.</div>
+</div>
+<div class="hist" id="hist"></div>
+</div></section>
+
+<section class="page" id="p-how" style="background:color-mix(in srgb,var(--pri) 6%,transparent)"><div class="wrap">
+<h2>How it works</h2><p class="sub">A simple four-stage AI pipeline.</p>
+<div class="steps">
+<div class="step"><h3>Capture</h3><p>Farmer photographs an affected leaf with a phone.</p></div>
+<div class="step"><h3>Pre-process</h3><p>Image is resized, normalised and color-segmented.</p></div>
+<div class="step"><h3>AI Prediction</h3><p>A CNN model classifies the symptoms and scores confidence.</p></div>
+<div class="step"><h3>Advice</h3><p>System returns severity, treatment and prevention tips.</p></div>
+</div>
+<p class="sub" style="margin-top:22px;font-size:.88rem">Note: this demo runs a lightweight in-browser color/lesion analysis to illustrate the workflow. The production design uses a CNN (e.g. MobileNetV2 / ResNet) trained on the PlantVillage dataset.</p>
+</div></section>
+
+<section class="page" id="p-library"><div class="wrap">
+<h2>Disease Library</h2><p class="sub">Common conditions the system recognises.</p>
+<div class="grid" id="lib"></div>
+</div></section>
+
+<section class="page" id="p-warn"><div class="wrap">
+<h2 data-i="w_t">⚠️ Early Warning System</h2><p class="sub" data-i="w_s">Enter local weather to see which diseases are likely in the coming days.</p>
+<div class="det"><div class="card">
+<select id="wc"></select>
+<div class="sl"><span>🌡 Temp °C</span><input type="range" id="wt" min="5" max="40" value="22"><b id="wtv">22</b></div>
+<div class="sl"><span>💧 Humidity %</span><input type="range" id="wh" min="20" max="100" value="80"><b id="whv">80</b></div>
+<div class="sl"><span>🌧 Rain mm/wk</span><input type="range" id="wr" min="0" max="100" value="30"><b id="wrv">30</b></div>
+</div><div class="res" id="wres"></div></div>
+</div></section>
+
+<section class="page" id="p-project" style="background:color-mix(in srgb,var(--pri) 6%,transparent)"><div class="wrap">
+<h2>📘 Project Report (PME)</h2><p class="sub">Project Management &amp; Economics overview.</p>
+<div class="tabs" id="tabs"></div>
+<div id="tabbody"></div>
+</div></section>
+
+<footer><div class="wrap">🌿 CropCare AI — AI Based Crop Disease Prediction System · PME Project · Made with ❤ for farmers</div></footer>
+
+<script>
+const D={
+healthy:{n:"Healthy Leaf",e:"✅",sev:"low",d:"No significant disease symptoms detected.",t:["No treatment needed."],p:["Continue regular irrigation and balanced fertilization","Scout the field weekly","Rotate crops each season"]},
+early:{n:"Early Blight",e:"🟤",sev:"mod",d:"Brown concentric-ring spots, usually on older leaves, caused by Alternaria fungus.",t:["Remove infected leaves","Spray Mancozeb or Chlorothalonil (follow label dose)","Apply copper-based fungicide every 7-10 days"],p:["Avoid overhead watering","Use disease-free seed","Practice 2-3 year crop rotation"]},
+late:{n:"Late Blight",e:"⚫",sev:"high",d:"Dark, water-soaked lesions that spread fast in cool, humid weather (Phytophthora).",t:["Remove and destroy infected plants","Spray Metalaxyl + Mancozeb immediately","Improve drainage and airflow"],p:["Plant resistant varieties","Avoid dense planting","Monitor weather alerts"]},
+mildew:{n:"Powdery Mildew",e:"⚪",sev:"mod",d:"White powdery fungal growth on leaf surface.",t:["Spray wettable sulphur or Hexaconazole","Neem oil (3 ml/L) as organic option","Prune crowded foliage"],p:["Ensure good air circulation","Avoid excess nitrogen","Water at the base of the plant"]},
+rust:{n:"Leaf Rust",e:"🟠",sev:"high",d:"Orange-red pustules on the leaf surface caused by rust fungi.",t:["Apply Propiconazole or Tebuconazole","Remove heavily infected leaves","Repeat spray after 14 days if needed"],p:["Grow rust-resistant varieties","Early sowing","Destroy volunteer plants"]},
+chlor:{n:"Chlorosis / Nutrient Deficiency",e:"🟡",sev:"low",d:"Yellowing leaves, often due to nitrogen, iron or magnesium deficiency or poor drainage.",t:["Soil test before applying fertilizer","Apply nitrogen/iron chelate as indicated","Correct waterlogging"],p:["Maintain soil pH 6-7","Add organic compost","Use balanced NPK schedule"]}
+};
+const $=id=>document.getElementById(id);
+// library
+$("lib").innerHTML=Object.values(D).map(x=>`<div class="card"><div class="e">${x.e}</div><h3>${x.n}</h3><p>${x.d}</p></div>`).join("");
+// theme
+$("th").onclick=()=>{const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"};
+// upload
+let img=null,hist=[];
+const file=$("file"),drop=$("drop");
+function load(f){if(!f||!f.type.startsWith("image/"))return;const r=new FileReader();r.onload=e=>{const i=new Image();i.onload=()=>{img=i;$("pv").src=e.target.result;$("pv").hidden=false;$("ph").hidden=true;$("go").disabled=false};i.src=e.target.result};r.readAsDataURL(f)}
+file.onchange=e=>load(e.target.files[0]);
+["dragover","dragenter"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("on")}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("on")}));
+drop.addEventListener("drop",e=>load(e.dataTransfer.files[0]));
+$("clr").onclick=()=>{img=null;file.value="";$("pv").hidden=true;$("ph").hidden=false;$("go").disabled=true;$("res").className="res empty";$("res").textContent="Your diagnosis will appear here."};
+// analysis
+function analyze(){
+const c=$("cv"),x=c.getContext("2d",{willReadFrequently:true});c.width=120;c.height=120*img.height/img.width|0||120;
+x.drawImage(img,0,0,c.width,c.height);const p=x.getImageData(0,0,c.width,c.height).data;
+let n=0,g=0,y=0,b=0,w=0,k=0,o=0;
+for(let i=0;i<p.length;i+=4){const r=p[i],gr=p[i+1],bl=p[i+2],mx=Math.max(r,gr,bl),mn=Math.min(r,gr,bl),l=(r+gr+bl)/3;
+if(mx<25||(mn>235))continue;n++;
+if(gr>r+8&&gr>bl+15)g++;
+else if(r>150&&gr>150&&bl<120&&Math.abs(r-gr)<50)y++;
+else if(r>170&&gr>80&&gr<165&&bl<90&&r-gr>45)o++;
+else if(mx-mn<30&&l>170)w++;
+else if(l<65)k++;
+else if(r>gr&&gr>=bl&&r-bl>25&&l<175)b++;}
+if(n<200)n=200;
+const f={g:g/n,y:y/n,b:b/n,w:w/n,k:k/n,o:o/n};
+const les=f.b+f.k+f.w+f.o+f.y;
+let key,conf;
+if(f.w>.12&&f.w>f.b){key="mildew";conf=60+f.w*120}
+else if(f.o>.06&&f.o>=f.b*.7){key="rust";conf=62+f.o*200}
+else if(f.k>.14&&f.k>f.b*.8){key="late";conf=62+f.k*100}
+else if(f.b>.07){key="early";conf=64+f.b*150}
+else if(f.y>.18&&f.y>f.b){key="chlor";conf=62+f.y*80}
+else{key="healthy";conf=70+f.g*28}
+conf=Math.min(97,Math.round(conf));
+return{key,conf,les:Math.round(les*100),g:Math.round(f.g*100)}}
+
+const CR={Tomato:["early","late","mildew","chlor"],Potato:["early","late","chlor"],Wheat:["rust","mildew","chlor"],Rice:["chlor","early"],Maize:["rust","early","chlor"],Grape:["mildew","late","chlor"],Apple:["mildew","rust","early"],Cotton:["chlor","early","mildew"]};
+$("crop").innerHTML=$("wc").innerHTML=Object.keys(CR).map(c=>`<option>${c}</option>`).join("");
+const INFO={early:"Fungus Alternaria solani. Spreads by wind and rain splash; favors warm (24-29°C), humid weather.",late:"Oomycete Phytophthora infestans. Spreads very rapidly in cool (10-20°C), wet weather and can destroy a field in days.",mildew:"Fungal disease favoring moderate temperature and high humidity with dry leaf surfaces. Spreads via airborne spores.",rust:"Rust fungi spread by wind-borne spores; favored by mild temperature and dew or humidity.",chlor:"Not an infection. Caused by lack of N, Fe or Mg, waterlogging or high soil pH.",healthy:"Leaf shows normal green tissue."};
+const HM={early:{hi:["अगेती झुलसा (अर्ली ब्लाइट)","संक्रमित पत्तियां हटाएं और मैन्कोज़ेब का छिड़काव करें।"],mr:["लवकर येणारा करपा (अर्ली ब्लाइट)","बाधित पाने काढा व मॅन्कोझेबची फवारणी करा."]},late:{hi:["पछेती झुलसा (लेट ब्लाइट)","तुरंत मेटालैक्सिल+मैन्कोज़ेब छिड़कें, संक्रमित पौधे नष्ट करें।"],mr:["उशिरा येणारा करपा (लेट ब्लाइट)","लगेच मेटालॅक्सिल+मॅन्कोझेब फवारा, बाधित झाडे नष्ट करा."]},mildew:{hi:["चूर्णिल आसिता (पाउडरी मिल्ड्यू)","गंधक या हेक्साकोनाज़ोल छिड़कें।"],mr:["भुरी रोग (पावडरी मिल्ड्यू)","गंधक किंवा हेक्साकोनॅझोल फवारा."]},rust:{hi:["पत्ती का रतुआ (रस्ट)","प्रोपिकोनाज़ोल का छिड़काव करें।"],mr:["तांबेरा (रस्ट)","प्रोपिकोनॅझोलची फवारणी करा."]},chlor:{hi:["पत्तियों का पीलापन / पोषक तत्वों की कमी","मिट्टी की जांच कराएं और संतुलित खाद दें।"],mr:["पाने पिवळी पडणे / अन्नद्रव्य कमतरता","माती तपासा व संतुलित खत द्या."]},healthy:{hi:["स्वस्थ पत्ती","कोई उपचार आवश्यक नहीं।"],mr:["निरोगी पान","उपचाराची गरज नाही."]}};
+const T={en:{n_home:"Home",n_det:"Detector",n_how:"How it works",n_lib:"Diseases",n_warn:"Early Warning",an:"Analyze leaf",hs:"Crop Health Score",sv:"Severity",none:"None",mild:"Mild",mod:"Moderate",sev:"Severe",conf:"Confidence",area:"Affected area",inf:"About this disease",tr:"Treatment",org:"Organic option",pr:"Prevention",say:"🔊 Listen",adv:"Advice",w_t:"⚠️ Early Warning System",w_s:"Enter local weather to see which diseases are likely in the coming days.",rk:"Risk",hi:"HIGH",md:"MEDIUM",lo:"LOW",wh:"Spray preventively and inspect fields daily.",wm:"Keep monitoring; avoid overhead irrigation.",wl:"Conditions are safe for now.",unc:"Note: this disease is uncommon in",chk:"– please verify with an expert.",wa:"Early warning:",wf:"Conditions favor spread — act within 2-3 days.",ws:"No major weather risk now."},
+hi:{n_home:"होम",n_det:"जांच",n_how:"कैसे काम करता है",n_lib:"रोग सूची",n_warn:"पूर्व चेतावनी",an:"पत्ती जांचें",hs:"फसल स्वास्थ्य स्कोर",sv:"गंभीरता",none:"कोई नहीं",mild:"हल्की",mod:"मध्यम",sev:"गंभीर",conf:"विश्वसनीयता",area:"प्रभावित क्षेत्र",inf:"रोग की जानकारी",tr:"उपचार",org:"जैविक उपाय",pr:"रोकथाम",say:"🔊 सुनें",adv:"सलाह",w_t:"⚠️ पूर्व चेतावनी प्रणाली",w_s:"मौसम दर्ज करें और संभावित रोग देखें।",rk:"जोखिम",hi:"अधिक",md:"मध्यम",lo:"कम",wh:"रोकथाम के लिए छिड़काव करें और रोज खेत देखें।",wm:"निगरानी रखें; ऊपर से सिंचाई से बचें।",wl:"अभी स्थिति सुरक्षित है।",unc:"ध्यान दें: यह रोग इस फसल में कम होता है:",chk:"– कृपया विशेषज्ञ से पुष्टि करें।",wa:"पूर्व चेतावनी:",wf:"मौसम रोग फैलने के अनुकूल है — 2-3 दिन में उपाय करें।",ws:"अभी मौसम से कोई बड़ा खतरा नहीं।"},
+mr:{n_home:"मुख्यपृष्ठ",n_det:"तपासणी",n_how:"कसे चालते",n_lib:"रोग यादी",n_warn:"पूर्व सूचना",an:"पान तपासा",hs:"पीक आरोग्य गुण",sv:"तीव्रता",none:"नाही",mild:"सौम्य",mod:"मध्यम",sev:"तीव्र",conf:"विश्वासार्हता",area:"बाधित भाग",inf:"रोगाची माहिती",tr:"उपचार",org:"सेंद्रिय उपाय",pr:"प्रतिबंध",say:"🔊 ऐका",adv:"सल्ला",w_t:"⚠️ पूर्व सूचना प्रणाली",w_s:"हवामान भरा व संभाव्य रोग पहा.",rk:"धोका",hi:"जास्त",md:"मध्यम",lo:"कमी",wh:"प्रतिबंधात्मक फवारणी करा व रोज शेत पहा.",wm:"लक्ष ठेवा; वरून पाणी देणे टाळा.",wl:"सध्या स्थिती सुरक्षित आहे.",unc:"टीप: हा रोग या पिकात कमी आढळतो:",chk:"– कृपया तज्ज्ञाकडून खात्री करा.",wa:"पूर्व सूचना:",wf:"हवामान रोग पसरण्यास अनुकूल — 2-3 दिवसांत उपाय करा.",ws:"सध्या मोठा धोका नाही."}};
+let L="en",last=null;
+const t=k=>T[L][k]||T.en[k];
+const nm=k=>L==="en"?D[k].n:HM[k][L][0];
+function risks(c,tp,h,r){const all={late:(h-60)*1.8+(r>20?15:0)-Math.abs(tp-17)*3,early:(h-55)*1.2-Math.abs(tp-27)*3+(r>10?10:0),mildew:(h>85?-10:30)+(h-40)*.6-Math.abs(tp-21)*3,rust:(h-55)*1.2-Math.abs(tp-20)*3+(r>10?15:0),chlor:(r-30)*1.5};
+return CR[c].map(k=>[k,Math.max(0,Math.min(100,Math.round(all[k])))])}
+function lvl(v){return v>=60?"hi":v>=30?"md":"lo"}
+function warn(){const c=$("wc").value,tp=+$("wt").value,h=+$("wh").value,r=+$("wr").value;$("wtv").textContent=tp;$("whv").textContent=h;$("wrv").textContent=r;
+const rs=risks(c,tp,h,r).sort((a,b)=>b[1]-a[1]);const top=lvl(rs[0][1]);
+$("wres").innerHTML=`<h3>${c}</h3>`+rs.map(([k,v])=>`<div class="sl" style="grid-template-columns:150px 1fr 70px"><span>${nm(k)}</span><div class="bar" style="margin:0"><i style="width:${v}%;background:${v>=60?"var(--bad)":v>=30?"var(--acc)":"var(--pri)"}"></i></div><b>${t(lvl(v))}</b></div>`).join("")+`<div class="alert ${top}">${top==="hi"?"🚨 ":top==="md"?"⚠️ ":"✅ "}${t(top==="hi"?"wh":top==="md"?"wm":"wl")}</div>`}
+["wc","wt","wh","wr"].forEach(i=>$(i).oninput=warn);
+function show(){if(!last)return;const{a,d,key,crop}=last,sevl=a.les<3?"none":a.les<10?"mild":a.les<25?"mod":"sev";
+const hs=key==="healthy"?Math.max(85,100-a.les):Math.max(5,Math.round(100-a.les*2.5));
+const hc=hs>=75?"var(--pri)":hs>=45?"var(--acc)":"var(--bad)";
+const wr=risks(crop,+$("wt").value,+$("wh").value,+$("wr").value).find(x=>x[0]===key);
+const ew=key!=="healthy"&&d.sev!=="low"?`<div class="alert hi">🚨 ${t("wa")} ${t("wf")}</div>`:`<div class="alert lo">✅ ${t("ws")}</div>`;
+const unc=key!=="healthy"&&!CR[crop].includes(key)?`<div class="alert md">${t("unc")} ${crop} ${t("chk")}</div>`:"";
+const hm=HM[key][L]||null,tx=L==="en"?d.t:null;
+$("res").className="res";
+$("res").innerHTML=`<div class="row2"><div class="gauge" style="background:conic-gradient(${hc} ${hs*3.6}deg,var(--bd) 0)"><span>${hs}</span></div><div><small style="color:var(--mut)">${t("hs")}</small><h3 style="margin:2px 0">${d.e} ${nm(key)}</h3><span class="pill sev-${sevl==="none"||sevl==="mild"?"low":sevl==="mod"?"mod":"high"}">${t("sv")}: ${t(sevl)} (${a.les}%)</span></div></div>
+<small>${t("conf")}: <b>${a.conf}%</b> · ${t("area")}: <b>${a.les}%</b> · 🌾 ${crop}</small><div class="bar"><i id="bi"></i></div>
+${ew}${unc}
+<h4>${t("adv")}</h4><p style="margin:0">${hm?hm[1]:d.t[0]}</p>
+<div class="detail"><h4>📖 ${t("inf")}</h4><p style="margin:0;color:var(--mut);font-size:.93rem">${L==="en"?d.d+" "+INFO[key]:HM[key][L][0]}</p>
+${L==="en"?`<h4>💊 ${t("tr")}</h4><ul>${d.t.map(x=>`<li>${x}</li>`).join("")}</ul><h4>🌿 ${t("org")}</h4><ul><li>Neem oil 3 ml/L water</li><li>Buttermilk or cow-urine spray (1:10)</li></ul><h4>🛡 ${t("pr")}</h4><ul>${d.p.map(x=>`<li>${x}</li>`).join("")}</ul>`:""}</div>
+<button class="btn ghost" id="sp" style="margin-top:14px">${t("say")}</button>`;
+requestAnimationFrame(()=>$("bi").style.width=a.conf+"%");
+$("sp").onclick=()=>{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(`${nm(key)}. ${t("hs")} ${hs}. ${hm?hm[1]:d.t[0]}`);u.lang={en:"en-IN",hi:"hi-IN",mr:"mr-IN"}[L];speechSynthesis.speak(u)}}
+$("go").onclick=()=>{
+const R=$("res");R.className="res";R.innerHTML='<div class="spin"></div>';
+setTimeout(()=>{const a=analyze(),crop=$("crop").value;last={a,key:a.key,d:D[a.key],crop};show();
+hist.unshift(`${new Date().toLocaleTimeString()} – ${crop}: ${D[a.key].n} (${a.conf}%)`);
+$("hist").innerHTML="<b>Recent scans</b><br>"+hist.slice(0,5).join("<br>")},900)};
+$("lang").onchange=e=>{L=e.target.value;document.querySelectorAll("[data-i]").forEach(el=>{if(T[L][el.dataset.i])el.textContent=T[L][el.dataset.i]});$("go").textContent=t("an");show();warn()};
+$("fmb").onclick=()=>document.body.classList.toggle("fm");
+warn();
+// project tabs
+const P={
+"Problem & Objectives":`<div class="pm"><div class="card"><h3>Problem Statement</h3><ul><li>Crop diseases cause major yield loss every year</li><li>Farmers lack quick access to agronomy experts</li><li>Manual identification is slow and error-prone</li><li>Late detection leads to excess pesticide use</li></ul></div><div class="card"><h3>Objectives</h3><ul><li>Detect crop disease from leaf images using AI</li><li>Provide instant treatment &amp; prevention advice</li><li>Build a simple, mobile-friendly interface</li><li>Reduce losses and pesticide misuse</li></ul></div></div>`,
+"Project Plan":`<div class="card scroll"><table><tr><th>Phase</th><th>Activity</th><th>Duration</th></tr><tr><td>1</td><td>Requirement analysis &amp; literature survey</td><td>Weeks 1-2</td></tr><tr><td>2</td><td>Dataset collection (PlantVillage)</td><td>Weeks 3-4</td></tr><tr><td>3</td><td>Model training &amp; evaluation (CNN)</td><td>Weeks 5-8</td></tr><tr><td>4</td><td>Web/app development</td><td>Weeks 9-11</td></tr><tr><td>5</td><td>Testing &amp; field validation</td><td>Week 12</td></tr><tr><td>6</td><td>Deployment &amp; documentation</td><td>Week 13-14</td></tr></table></div>`,
+"Cost Estimate":`<div class="card scroll"><table><tr><th>Item</th><th>Cost (₹)</th></tr><tr><td>Cloud GPU / training</td><td>8,000</td></tr><tr><td>Hosting &amp; domain (1 year)</td><td>3,000</td></tr><tr><td>Dataset &amp; storage</td><td>2,000</td></tr><tr><td>Testing devices / field visits</td><td>5,000</td></tr><tr><td>Documentation &amp; misc.</td><td>2,000</td></tr><tr><td><b>Total</b></td><td><b>20,000</b></td></tr></table></div>`,
+"Business Model":`<div class="pm"><div class="card"><h3>Revenue Streams</h3><ul><li>Free basic scans, premium plan for agri-businesses</li><li>Subscription for FPOs &amp; cooperatives</li><li>Partnerships with fertilizer/pesticide dealers</li><li>API access for agri-tech apps</li></ul></div><div class="card"><h3>Target Users</h3><ul><li>Small &amp; marginal farmers</li><li>Agriculture extension officers</li><li>Farmer Producer Organisations</li><li>Agri students &amp; researchers</li></ul></div></div>`,
+"SWOT & Risks":`<div class="pm"><div class="card"><h3>Strengths / Opportunities</h3><ul><li>Fast, low-cost, scalable</li><li>Growing smartphone use in rural India</li><li>Govt. push for digital agriculture</li></ul></div><div class="card"><h3>Weaknesses / Threats</h3><ul><li>Needs good internet and clear photos</li><li>Accuracy depends on dataset quality</li><li>Language barriers → add Marathi/Hindi</li></ul></div></div>`,
+"Team":`<div class="pm"><div class="card"><h3>Project Team</h3><ul><li>Member 1 – Project Lead / AI Model</li><li>Member 2 – Frontend Developer</li><li>Member 3 – Data &amp; Testing</li><li>Member 4 – Documentation &amp; Costing</li></ul><p style="margin-top:10px;font-size:.85rem;color:var(--mut)">Edit names in the code before submission.</p></div></div>`};
+const tb=$("tabs");
+Object.keys(P).forEach((k,i)=>{const b=document.createElement("button");b.textContent=k;b.onclick=()=>{[...tb.children].forEach(c=>c.classList.remove("a"));b.classList.add("a");$("tabbody").innerHTML=P[k]};tb.appendChild(b);if(!i)b.click()});
+
+const pages=["home","detect","how","library","warn","project"];
+function route(){const h=(location.hash||"#home").slice(1);const r=pages.includes(h)?h:"home";
+pages.forEach(p=>$("p-"+p).classList.toggle("on",p===r));
+document.querySelectorAll("#menu a").forEach(a=>a.classList.toggle("on",a.dataset.r===r));
+scrollTo(0,0)}
+addEventListener("hashchange",route);route();
+</script>
+</body>
+</html>
